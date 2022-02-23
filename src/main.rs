@@ -4,9 +4,9 @@
 extern crate nom;
 
 use nom::{
-    bytes::complete::{take_till, take_while, take_while1},
+    bytes::complete::{take_till, take_while, take_while1, tag_no_case},
     error::context,
-    Finish};
+    branch::alt};
 
 enum Prefix {
     Yocto,
@@ -37,12 +37,6 @@ enum Unit {
     Litre,
 }
 
-enum Conjunction {
-    To,
-    In,
-    Arrow,
-}
-
 #[derive(Debug, PartialEq)]
 enum Hormone {
     Testosterone,
@@ -65,17 +59,6 @@ struct Expression {
     unit_in: UnitRatio,
     unit_out: UnitRatio,
     in_val: f64,
-}
-
-impl From<&str> for Conjunction {
-    fn from(i: &str) -> Self {
-        match i.to_lowercase().as_str() {
-            "in" => Conjunction::In,
-            "to" => Conjunction::To,
-            "->"|">" => Conjunction::Arrow,
-            _ => unimplemented!("no other Hormones supported")
-        }
-    }
 }
 
 impl From<&str> for Hormone {
@@ -134,6 +117,15 @@ fn hormone(i: &str) -> nom::IResult<&str, Hormone> {
         take_till(|c| c == ' '))(i).map(|(next_i, res)| (next_i, res.into()))
 }
 
+fn conjunction(i: &str) -> nom::IResult<&str, &str> {
+    alt((
+        tag_no_case("in"),
+        tag_no_case("to"),
+        tag_no_case("->"),
+        tag_no_case(">"),
+    ))(i)
+}
+
 fn space1(i: &str) -> nom::IResult<&str, &str> {
     take_while1(|c| c == ' ')(i)
 }
@@ -176,4 +168,24 @@ fn test_space() {
 
     assert_eq!(space(" 1.8nmol/l to ng/dl"), Ok(("1.8nmol/l to ng/dl", " ")));
     assert_ne!(space("1.8nmol/l to ng/dl"), Ok(("1.8nmol/l to ng/dl", " ")));
+}
+
+#[test]
+fn test_conjunction() {
+    assert_eq!(conjunction("in ng/dl"), Ok((" ng/dl", "in")));
+    assert_eq!(conjunction("to ng/dl"), Ok((" ng/dl", "to")));
+    assert_eq!(conjunction("> ng/dl"), Ok((" ng/dl", ">")));
+    assert_eq!(conjunction("-> ng/dl"), Ok((" ng/dl", "->")));
+
+    assert_ne!(conjunction(" in ng/dl"), Ok((" ng/dl", " in")));
+    assert_ne!(conjunction(" to ng/dl"), Ok((" ng/dl", " to")));
+    assert_ne!(conjunction(" > ng/dl"), Ok((" ng/dl", " >")));
+    assert_ne!(conjunction(" -> ng/dl"), Ok((" ng/dl", " ->")));
+
+    assert_ne!(conjunction(" in ng/dl"), Ok((" ng/dl", "in")));
+    assert_ne!(conjunction(" to ng/dl"), Ok((" ng/dl", "to")));
+    assert_ne!(conjunction(" > ng/dl"), Ok((" ng/dl", ">")));
+    assert_ne!(conjunction(" -> ng/dl"), Ok((" ng/dl", "->")));
+
+    assert_ne!(conjunction("nope ng/dl"), Ok((" ng/dl", "nope")));
 }
