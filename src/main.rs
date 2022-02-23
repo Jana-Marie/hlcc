@@ -37,6 +37,12 @@ enum Unit {
     Litre,
 }
 
+enum Conjunction {
+    To,
+    In,
+    Arrow,
+}
+
 #[derive(Debug, PartialEq)]
 enum Hormone {
     Testosterone,
@@ -59,6 +65,17 @@ struct Expression {
     unit_in: UnitRatio,
     unit_out: UnitRatio,
     in_val: f64,
+}
+
+impl From<&str> for Conjunction {
+    fn from(i: &str) -> Self {
+        match i.to_lowercase().as_str() {
+            "in" => Conjunction::In,
+            "to" => Conjunction::To,
+            "->"|">" => Conjunction::Arrow,
+            _ => unimplemented!("no other Hormones supported")
+        }
+    }
 }
 
 impl From<&str> for Hormone {
