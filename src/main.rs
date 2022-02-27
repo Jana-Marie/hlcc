@@ -381,4 +381,46 @@ fn test_hcc() {
             }
         ))
     );
+
+    assert_eq!(hcc_parser("P4 111pg/ml > nmol/dl"), Ok(("", Expression {
+                hormone: Hormone::Progesterone,
+                unit_in: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Pico,
+                        unit: Unit::Gram},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Milli,
+                        unit: Unit::Litre}},
+                unit_out: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Nano,
+                        unit: Unit::Mole},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Deci,
+                        unit: Unit::Litre}},
+                in_val: 111.0,
+            }
+        ))
+    );
+
+    assert_ne!(hcc_parser("E2 111pg/ml > nmol/dl"), Ok(("", Expression {
+                hormone: Hormone::Estradiol,
+                unit_in: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Nano,
+                        unit: Unit::Gram},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Milli,
+                        unit: Unit::Litre}},
+                unit_out: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Nano,
+                        unit: Unit::Mole},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Deci,
+                        unit: Unit::Litre}},
+                in_val: 111.0,
+            }
+        ))
+    );
 }
