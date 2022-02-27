@@ -2,7 +2,6 @@
 // Jana Marie Hemsing - 2022
 
 extern crate nom;
-
 use nom::{
     bytes::complete::{take_till, take_while, take_while1, tag_no_case, tag},
     error::context,
@@ -11,6 +10,7 @@ use nom::{
     number::complete::double,
     combinator::peek,
     };
+use std::env;
 
 #[derive(Debug, PartialEq)]
 enum Prefix {
@@ -135,7 +135,7 @@ impl From<Prefix> for f64 {
             Prefix::Milli => 1e-3,
             Prefix::Centi => 1e-2,
             Prefix::Deci => 1e-1,
-            Prefix::None => 0.0,
+            Prefix::None => 1e+0,
             Prefix::Deka => 1e+1,
             Prefix::Hecto => 1e+2,
             Prefix::Kilo => 1e+3,
@@ -279,7 +279,33 @@ fn hcc_parser(i: &str) -> nom::IResult<&str, Expression> {
 }
 
 fn main() {
-    //hcc_parser(data);
+    let args: Vec<String> = env::args().collect();
+    println!("{:?}", args[1]);
+    //println!("{:?}", hcc_parser(&args[1]));
+    if let Ok(res) = hcc_parser(&args[1]) {
+        let expression = res.1;
+        println!("{:?}", expression);
+
+        let prefix_calculation =    (f64::from(expression.unit_in.numerator.prefix) * f64::from(expression.unit_out.denominator.prefix))/
+                                    (f64::from(expression.unit_in.denominator.prefix) * f64::from(expression.unit_out.numerator.prefix));
+        let mut result = 0.0;
+        if expression.unit_in.numerator.unit == Unit::Mole && expression.unit_out.numerator.unit == Unit::Gram {
+            result = prefix_calculation * (f64::from(expression.in_val) * f64::from(expression.hormone));
+        } else if expression.unit_in.numerator.unit == Unit::Gram && expression.unit_out.numerator.unit == Unit::Mole {
+            result = prefix_calculation * (f64::from(expression.in_val) / f64::from(expression.hormone));
+        }
+
+
+        println!("{:?}", prefix_calculation);
+        println!("{:?}", result);
+
+        // p = ((num_in * denom_out)/(denom_in*num_out))
+        // y = p * x
+        // wtf float ;-;
+
+    } else {
+        println!("Yet unknown error!");
+    }
 }
 
 #[test]
@@ -400,7 +426,7 @@ fn test_hcc() {
         ))
     );
 
-    assert_eq!(hcc_parser("E2 111pg/ml > nmol/dl"), Ok(("", Expression {
+    assert_eq!(hcc_parser("E2 111pg/ml to nmol/dl"), Ok(("", Expression {
                 hormone: Hormone::Estradiol,
                 unit_in: UnitRatio {
                     numerator: UnitSingle {
@@ -422,6 +448,27 @@ fn test_hcc() {
     );
 
     assert_eq!(hcc_parser("P4 111pg/ml > nmol/dl"), Ok(("", Expression {
+                hormone: Hormone::Progesterone,
+                unit_in: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Pico,
+                        unit: Unit::Gram},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Milli,
+                        unit: Unit::Litre}},
+                unit_out: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Nano,
+                        unit: Unit::Mole},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Deci,
+                        unit: Unit::Litre}},
+                in_val: 111.0,
+            }
+        ))
+    );
+
+    assert_eq!(hcc_parser("P4  111 pg/ml   ->  nmol/dl"), Ok(("", Expression {
                 hormone: Hormone::Progesterone,
                 unit_in: UnitRatio {
                     numerator: UnitSingle {
