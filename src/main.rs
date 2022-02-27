@@ -112,6 +112,35 @@ impl From<&str> for Prefix {
     }
 }
 
+impl From<Prefix> for f64 {
+    fn from(i: Prefix) -> Self {
+        match i {
+            Prefix::Yocto => 1e-24,
+            Prefix::Zepto => 1e-21,
+            Prefix::Atto => 1e-18,
+            Prefix::Femto => 1e-15,
+            Prefix::Pico => 1e-12,
+            Prefix::Nano => 1e-9,
+            Prefix::Mikro => 1e-6,
+            Prefix::Milli => 1e-3,
+            Prefix::Centi => 1e-2,
+            Prefix::Deci => 1e-1,
+            Prefix::None => 0.0,
+            Prefix::Deka => 1e+1,
+            Prefix::Hecto => 1e+2,
+            Prefix::Kilo => 1e+3,
+            Prefix::Mega => 1e+6,
+            Prefix::Giga => 1e+9,
+            Prefix::Tera => 1e+12,
+            Prefix::Peta => 1e+15,
+            Prefix::Exa => 1e+18,
+            Prefix::Zetta => 1e+21,
+            Prefix::Yotta => 1e+24,
+        }
+    }
+}
+
+
 impl From<&str> for Unit {
     fn from(i: &str) -> Self {
         match i {
