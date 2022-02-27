@@ -4,14 +4,12 @@
 extern crate nom;
 
 use nom::{
-    bytes::complete::{take_till, take_while, take_while1, tag_no_case, tag, is_a, take},
+    bytes::complete::{take_till, take_while, take_while1, tag_no_case, tag},
     error::context,
-    character::complete::{anychar},
     sequence::{tuple, pair},
     branch::alt,
     number::complete::double,
-    combinator::{recognize, peek},
-    IResult,
+    combinator::peek,
     };
 
 #[derive(Debug, PartialEq)]
@@ -54,16 +52,19 @@ enum Hormone {
     Progesterone,
 }
 
+#[derive(Debug, PartialEq)]
 struct UnitSingle {
-    prefix: Option<Prefix>,
+    prefix: Prefix,
     unit: Unit,
 }
 
+#[derive(Debug, PartialEq)]
 struct UnitRatio {
     numerator: UnitSingle,
     denominator: UnitSingle,
 }
 
+#[derive(Debug, PartialEq)]
 struct Expression {
     hormone: Hormone,
     unit_in: UnitRatio,
@@ -145,6 +146,8 @@ fn prefix(i: &str) -> nom::IResult<&str, Prefix> {
             tag("u"),
             tag("µ"),
             tag("m"),
+            tag("c"),
+            tag("d"),
         )))(i).map(|(next_i, res)| (next_i, res.into()))
 }
 
@@ -164,11 +167,11 @@ fn unit(i: &str) -> nom::IResult<&str, Unit> {
         take_till(|c| c == ' ' || c == '/'))(i).map(|(next_i, res)| (next_i, res.into()))
 }
 
-fn unit_prefixed(i: &str) -> nom::IResult<&str, (Prefix, Unit)> {
+fn unit_prefixed(i: &str) -> nom::IResult<&str, (Prefix, Unit)> { // todo return UnitSingle instead of touple
     match is_unit(i) {
         Ok((_, Unit::None)) => pair(prefix, unit)(i),
         Ok(_) => pair(prefix_dummy, unit)(i),
-        Err(_) => unimplemented!("Weird Error"),
+        Err(_) => unimplemented!("Weird Error, this should never happen."),
     }
 }
 
@@ -190,10 +193,51 @@ fn space(i: &str) -> nom::IResult<&str, &str> {
 }
 
 
-//fn hcc_parser(i: &str) -> nom::IResult<&str, (Hormone, &str)> {
-//    let h = hormone(i);
-//    let _ = take_while(|c| c == ' ')(i);
-//}
+fn hcc_parser(i: &str) -> nom::IResult<&str, Expression> {
+    context(
+        "Expression",
+        tuple((
+            hormone,
+            space1,
+            value,
+            space,
+            unit_prefixed,
+            fractional_bar,
+            unit_prefixed,
+            space1,
+            conjunction,
+            space1,
+            unit_prefixed,
+            fractional_bar,
+            unit_prefixed,
+        )),
+    )(i).map(|(next_i, res)| {
+        let (hormone, _, in_val, _, unit_in_num, _, unit_in_den, _, _, _,  unit_out_num, _, unit_out_den) = res;
+        let unit_in = UnitRatio {
+            numerator: UnitSingle {
+                prefix: unit_in_num.0,
+                unit: unit_in_num.1},
+            denominator: UnitSingle {
+                prefix: unit_in_den.0,
+                unit: unit_in_den.1}};
+        let unit_out = UnitRatio {
+            numerator: UnitSingle {
+                prefix: unit_out_num.0,
+                unit: unit_out_num.1},
+            denominator: UnitSingle {
+                prefix: unit_out_den.0,
+                unit: unit_out_den.1}};
+        (
+            next_i,
+            Expression {
+                hormone,
+                unit_in,
+                unit_out,
+                in_val,
+            },
+        )
+    })
+}
 
 fn main() {
     //hcc_parser(data);
@@ -292,4 +336,49 @@ fn test_unit_prefixed() {
     assert_eq!(unit_prefixed("mℓ/dl"), Ok(("/dl", (Prefix::Milli, Unit::Litre))));
 
     assert_ne!(unit_prefixed("Ottl/dl"), Ok(("/dl", (Prefix::None, Unit::Litre))));
+}
+
+#[test]
+fn test_hcc() {
+    assert_eq!(hcc_parser("Testo 1.8nmol/l in pg/ml"), Ok(("", Expression {
+                hormone: Hormone::Testosterone,
+                unit_in: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Nano,
+                        unit: Unit::Mole},
+                    denominator: UnitSingle {
+                        prefix: Prefix::None,
+                        unit: Unit::Litre}},
+                unit_out: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Pico,
+                        unit: Unit::Gram},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Milli,
+                        unit: Unit::Litre}},
+                in_val: 1.8,
+            }
+        ))
+    );
+
+    assert_eq!(hcc_parser("E2 111pg/ml > nmol/dl"), Ok(("", Expression {
+                hormone: Hormone::Estradiol,
+                unit_in: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Pico,
+                        unit: Unit::Gram},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Milli,
+                        unit: Unit::Litre}},
+                unit_out: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: Prefix::Nano,
+                        unit: Unit::Mole},
+                    denominator: UnitSingle {
+                        prefix: Prefix::Deci,
+                        unit: Unit::Litre}},
+                in_val: 111.0,
+            }
+        ))
+    );
 }
