@@ -83,6 +83,16 @@ impl From<&str> for Hormone {
     }
 }
 
+impl From<Hormone> for f64 {
+    fn from(i: Hormone) -> Self {
+        match i {
+            Hormone::Testosterone => 288.42442,
+            Hormone::Estradiol => 272.38,
+            Hormone::Progesterone => 314.46,
+        }
+    }
+}
+
 impl From<&str> for Prefix {
     fn from(i: &str) -> Self {
         match i {
