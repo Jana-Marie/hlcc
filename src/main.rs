@@ -252,57 +252,49 @@ fn hcc_parser(i: &str) -> nom::IResult<&str, Expression> {
         )),
     )(i).map(|(next_i, res)| {
         let (hormone, _, in_val, _, unit_in_num, _, unit_in_den, _, _, _,  unit_out_num, _, unit_out_den) = res;
-        let unit_in = UnitRatio {
-            numerator: UnitSingle {
-                prefix: unit_in_num.0,
-                unit: unit_in_num.1},
-            denominator: UnitSingle {
-                prefix: unit_in_den.0,
-                unit: unit_in_den.1}};
-        let unit_out = UnitRatio {
-            numerator: UnitSingle {
-                prefix: unit_out_num.0,
-                unit: unit_out_num.1},
-            denominator: UnitSingle {
-                prefix: unit_out_den.0,
-                unit: unit_out_den.1}};
         (
             next_i,
             Expression {
                 hormone,
-                unit_in,
-                unit_out,
+                unit_in: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: unit_in_num.0,
+                        unit: unit_in_num.1},
+                    denominator: UnitSingle {
+                        prefix: unit_in_den.0,
+                        unit: unit_in_den.1}},
+                unit_out: UnitRatio {
+                    numerator: UnitSingle {
+                        prefix: unit_out_num.0,
+                        unit: unit_out_num.1},
+                    denominator: UnitSingle {
+                        prefix: unit_out_den.0,
+                        unit: unit_out_den.1}},
                 in_val,
             },
         )
     })
 }
 
+fn compute_result(exp: Expression) -> nom::IResult<&'static str, f64> { // I do not get Rust return types yet :(
+    let prefix_calculation = (f64::from(exp.unit_in.numerator.prefix) * f64::from(exp.unit_out.denominator.prefix)) / (f64::from(exp.unit_in.denominator.prefix) * f64::from(exp.unit_out.numerator.prefix));
+
+    let mut value_out = 0.0; // very ugly math engine, does not allow all calculations, probably just prrof of concept
+    if exp.unit_in.numerator.unit == Unit::Mole && exp.unit_out.numerator.unit == Unit::Gram {
+        value_out = prefix_calculation * (f64::from(exp.in_val) * f64::from(exp.hormone))
+    } else if exp.unit_in.numerator.unit == Unit::Gram && exp.unit_out.numerator.unit == Unit::Mole {
+        value_out = prefix_calculation * (f64::from(exp.in_val) / f64::from(exp.hormone))
+    }
+    Ok(("", value_out))
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     println!("{:?}", args[1]);
-    //println!("{:?}", hcc_parser(&args[1]));
-    if let Ok(res) = hcc_parser(&args[1]) {
-        let expression = res.1;
-        println!("{:?}", expression);
 
-        let prefix_calculation =    (f64::from(expression.unit_in.numerator.prefix) * f64::from(expression.unit_out.denominator.prefix))/
-                                    (f64::from(expression.unit_in.denominator.prefix) * f64::from(expression.unit_out.numerator.prefix));
-        let mut result = 0.0;
-        if expression.unit_in.numerator.unit == Unit::Mole && expression.unit_out.numerator.unit == Unit::Gram {
-            result = prefix_calculation * (f64::from(expression.in_val) * f64::from(expression.hormone));
-        } else if expression.unit_in.numerator.unit == Unit::Gram && expression.unit_out.numerator.unit == Unit::Mole {
-            result = prefix_calculation * (f64::from(expression.in_val) / f64::from(expression.hormone));
-        }
-
-
-        println!("{:?}", prefix_calculation);
-        println!("{:?}", result);
-
-        // p = ((num_in * denom_out)/(denom_in*num_out))
-        // y = p * x
-        // wtf float ;-;
-
+    if let Ok((_, expression)) = hcc_parser(&args[1]) {
+        let value_out = compute_result(expression);
+        println!("{:.2?}", value_out);
     } else {
         println!("Yet unknown error!");
     }
