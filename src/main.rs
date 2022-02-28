@@ -11,7 +11,7 @@ use nom::{
     combinator::peek,
     };
 use std::env;
-use std::fmt;
+//use std::fmt;
 
 #[derive(Debug, PartialEq)]
 enum Prefix {
@@ -278,13 +278,11 @@ fn hcc_parser(i: &str) -> nom::IResult<&str, Expression> {
 
 fn compute_result(expression: Expression) -> f64 {
     let prefix_calculation = -((i32::from(expression.unit_in.numerator.prefix) + i32::from(expression.unit_out.denominator.prefix)) - (i32::from(expression.unit_in.denominator.prefix) + i32::from(expression.unit_out.numerator.prefix))); // use fixed point math to not loose precision
-    let mut value_out = 0.0; // very ugly math engine, does not allow all calculations, probably just prrof of concept
-    match (expression.unit_in.numerator.unit, expression.unit_out.numerator.unit) {
-        (Unit::Mole, Unit::Gram) => {value_out = f64::powf(10.0, prefix_calculation.into()) * (f64::from(expression.in_val) * f64::from(expression.hormone));},
-        (Unit::Gram, Unit::Mole) => {value_out = f64::powf(10.0, prefix_calculation.into())  * (f64::from(expression.in_val) / f64::from(expression.hormone));},
-        (_,_) => {value_out = 0.0;},
+    match (expression.unit_in.numerator.unit, expression.unit_out.numerator.unit) { // very ugly math engine, does not allow all calculations, probably just prrof of concept
+        (Unit::Mole, Unit::Gram) => f64::powf(10.0, prefix_calculation.into()) * (f64::from(expression.in_val) * f64::from(expression.hormone)),
+        (Unit::Gram, Unit::Mole) => f64::powf(10.0, prefix_calculation.into())  * (f64::from(expression.in_val) / f64::from(expression.hormone)),
+        (_,_) => 0.0,
     }
-    value_out
 }
 
 //impl fmt::Display for Expression::Hormone {
@@ -294,7 +292,7 @@ fn compute_result(expression: Expression) -> f64 {
 //}
 //
 //fn print_result(expression: Expression, result: f64) {
-//    println!("{} {}", expression.hormone, result);
+//    println!("{:?} {}", expression.hormone, result);
 //}
 
 fn main() {
@@ -303,6 +301,8 @@ fn main() {
 
     if let Ok((_, expression)) = hcc_parser(&args[1]) {
         let value_out = compute_result(expression);
+        println!("Result: {:.2}", value_out);
+        //println!("{:?} {}", &expression.hormone, value_out);
         //print_result(expression, value_out);
     } else {
         println!("Yet unknown error!");
