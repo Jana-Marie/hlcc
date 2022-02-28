@@ -11,6 +11,7 @@ use nom::{
     combinator::peek,
     };
 use std::env;
+use std::fmt;
 
 #[derive(Debug, PartialEq)]
 enum Prefix {
@@ -122,34 +123,33 @@ impl From<&str> for Prefix {
     }
 }
 
-impl From<Prefix> for f64 {
+impl From<Prefix> for i32 {
     fn from(i: Prefix) -> Self {
         match i {
-            Prefix::Yocto => 1e-24,
-            Prefix::Zepto => 1e-21,
-            Prefix::Atto => 1e-18,
-            Prefix::Femto => 1e-15,
-            Prefix::Pico => 1e-12,
-            Prefix::Nano => 1e-9,
-            Prefix::Mikro => 1e-6,
-            Prefix::Milli => 1e-3,
-            Prefix::Centi => 1e-2,
-            Prefix::Deci => 1e-1,
-            Prefix::None => 1e+0,
-            Prefix::Deka => 1e+1,
-            Prefix::Hecto => 1e+2,
-            Prefix::Kilo => 1e+3,
-            Prefix::Mega => 1e+6,
-            Prefix::Giga => 1e+9,
-            Prefix::Tera => 1e+12,
-            Prefix::Peta => 1e+15,
-            Prefix::Exa => 1e+18,
-            Prefix::Zetta => 1e+21,
-            Prefix::Yotta => 1e+24,
+            Prefix::Yocto => 24,
+            Prefix::Zepto => 21,
+            Prefix::Atto  => 18,
+            Prefix::Femto => 15,
+            Prefix::Pico  => 12,
+            Prefix::Nano  => 9,
+            Prefix::Mikro => 6,
+            Prefix::Milli => 3,
+            Prefix::Centi => 2,
+            Prefix::Deci  => 1,
+            Prefix::None  => 0,
+            Prefix::Deka  => 1,
+            Prefix::Hecto => 2,
+            Prefix::Kilo  => 3,
+            Prefix::Mega  => 6,
+            Prefix::Giga  => 9,
+            Prefix::Tera  => 12,
+            Prefix::Peta  => 15,
+            Prefix::Exa   => 18,
+            Prefix::Zetta => 21,
+            Prefix::Yotta => 24,
         }
     }
 }
-
 
 impl From<&str> for Unit {
     fn from(i: &str) -> Self {
@@ -276,17 +276,26 @@ fn hcc_parser(i: &str) -> nom::IResult<&str, Expression> {
     })
 }
 
-fn compute_result(exp: Expression) -> nom::IResult<&'static str, f64> { // I do not get Rust return types yet :(
-    let prefix_calculation = (f64::from(exp.unit_in.numerator.prefix) * f64::from(exp.unit_out.denominator.prefix)) / (f64::from(exp.unit_in.denominator.prefix) * f64::from(exp.unit_out.numerator.prefix));
-
+fn compute_result(expression: Expression) -> f64 {
+    let prefix_calculation = -((i32::from(expression.unit_in.numerator.prefix) + i32::from(expression.unit_out.denominator.prefix)) - (i32::from(expression.unit_in.denominator.prefix) + i32::from(expression.unit_out.numerator.prefix))); // use fixed point math to not loose precision
     let mut value_out = 0.0; // very ugly math engine, does not allow all calculations, probably just prrof of concept
-    match (exp.unit_in.numerator.unit, exp.unit_out.numerator.unit) {
-        (Unit::Mole, Unit::Gram) => {value_out = prefix_calculation * (f64::from(exp.in_val) * f64::from(exp.hormone));},
-        (Unit::Gram, Unit::Mole) => {value_out = prefix_calculation * (f64::from(exp.in_val) / f64::from(exp.hormone));},
+    match (expression.unit_in.numerator.unit, expression.unit_out.numerator.unit) {
+        (Unit::Mole, Unit::Gram) => {value_out = f64::powf(10.0, prefix_calculation.into()) * (f64::from(expression.in_val) * f64::from(expression.hormone));},
+        (Unit::Gram, Unit::Mole) => {value_out = f64::powf(10.0, prefix_calculation.into())  * (f64::from(expression.in_val) / f64::from(expression.hormone));},
         (_,_) => {value_out = 0.0;},
     }
-    Ok(("", value_out))
+    value_out
 }
+
+//impl fmt::Display for Expression::Hormone {
+//    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//        write!(f, "{}", self)
+//    }
+//}
+//
+//fn print_result(expression: Expression, result: f64) {
+//    println!("{} {}", expression.hormone, result);
+//}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -294,7 +303,7 @@ fn main() {
 
     if let Ok((_, expression)) = hcc_parser(&args[1]) {
         let value_out = compute_result(expression);
-        println!("{:.2?}", value_out);
+        //print_result(expression, value_out);
     } else {
         println!("Yet unknown error!");
     }
