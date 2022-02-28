@@ -280,10 +280,10 @@ fn compute_result(exp: Expression) -> nom::IResult<&'static str, f64> { // I do 
     let prefix_calculation = (f64::from(exp.unit_in.numerator.prefix) * f64::from(exp.unit_out.denominator.prefix)) / (f64::from(exp.unit_in.denominator.prefix) * f64::from(exp.unit_out.numerator.prefix));
 
     let mut value_out = 0.0; // very ugly math engine, does not allow all calculations, probably just prrof of concept
-    if exp.unit_in.numerator.unit == Unit::Mole && exp.unit_out.numerator.unit == Unit::Gram {
-        value_out = prefix_calculation * (f64::from(exp.in_val) * f64::from(exp.hormone))
-    } else if exp.unit_in.numerator.unit == Unit::Gram && exp.unit_out.numerator.unit == Unit::Mole {
-        value_out = prefix_calculation * (f64::from(exp.in_val) / f64::from(exp.hormone))
+    match (exp.unit_in.numerator.unit, exp.unit_out.numerator.unit) {
+        (Unit::Mole, Unit::Gram) => {value_out = prefix_calculation * (f64::from(exp.in_val) * f64::from(exp.hormone));},
+        (Unit::Gram, Unit::Mole) => {value_out = prefix_calculation * (f64::from(exp.in_val) / f64::from(exp.hormone));},
+        (_,_) => {value_out = 0.0;},
     }
     Ok(("", value_out))
 }
