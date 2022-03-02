@@ -299,6 +299,6 @@ pub fn compute_input(x: String) -> f64{
         println!("Result: {:.2}", value_out);
         value_out
     } else {
-        10.0
+        -1.0
     }
 }
