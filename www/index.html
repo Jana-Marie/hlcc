@@ -7,11 +7,14 @@
 		<meta charset="utf-8">
 		<style type="text/css">
 			body,html {
-				width: 100%;
+				width: 100vw;
 				height: 100%;
+			  min-height: 100%;
 				font-family: 'Roboto', sans-serif;
 				box-sizing: border-box;
 				background-color: #000;
+				overflow-x: hidden;
+				overflow-y: hidden;
 			}
 
 			.bg-image {
@@ -20,7 +23,9 @@
 				-webkit-filter: blur(20px) brightness(23%);
 				height: 100%;
 				width: 100%;
-				background-position: center;
+   		  margin: -10px;
+				background-position: center center;
+				position: absolute;
 				background-repeat: no-repeat;
 				background-size: cover;
 			}
