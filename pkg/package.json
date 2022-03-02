@@ -1,0 +1,24 @@
+{
+  "name": "hlcc",
+  "collaborators": [
+    "Jana Marie Hemsing <janamarie@janamarie.dev>"
+  ],
+  "description": "A string parsing and web based hormone level conversion calculator. It can evaluate strings like „Testo 1.8nmol/l to pg/ml“ and display the result.",
+  "version": "0.1.0",
+  "license": "tba",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jana-Marie/hlcc/"
+  },
+  "files": [
+    "hlcc_bg.wasm",
+    "hlcc.js",
+    "hlcc_bg.js",
+    "hlcc.d.ts",
+    "LICENSE_MIT",
+    "LICENSE_APACHE"
+  ],
+  "module": "hlcc.js",
+  "types": "hlcc.d.ts",
+  "sideEffects": false
+}
