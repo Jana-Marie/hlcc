@@ -34,8 +34,9 @@ Oh and about the web interface, it is shitty, I know, I sincerely don't get CSS,
 
  - [ ] Rust: change f64 to d128 to avoid floating point rounding errors (decimal = "2.1")
  - [ ] Rust: add pretty print for output unit
- - [ ] Rust: add hormones: aldosterone, Gonadotropin, Gonadorhelin, SHBG
+ - [x] Rust: add hormones: aldosterone, Gonadotropin, Gonadorhelin, SHBG,
  - [ ] Rust: add other blood and vital levels
+ - [ ] Rust & JS: &str instead of String
  - [ ] Docs: add license
  - [ ] Web: change input fielt to form
  - [ ] Web: move output value to righthandside of the Input
