@@ -1,16 +1,18 @@
 # hlcc :syringe:
 
-hlcc is a Rust :crab: and web based hormone level conversion calculator. It expects a string with the desired hormone, its level and the target unit; e.g. "*Testo 1.8nmol/l in ng/ml*", "*e2 111pg/ml to nmol/l*", "*Progesterone 0.07pg/ml to mol/l*". And computes the desired result. A functioning version is currently hostet at [hlcc.haj.gf](https://hlcc.haj.gf)
+hlcc is a Rust :crab: and web based hormone level conversion calculator. It expects a string with the desired hormone, its level and the target unit; e.g. "*Testo 1.8nmol/l in ng/ml*", "*e2 111pg/ml to nmol/l*" or "*Progesterone 0.07pg/ml to mol/l*". And computes the desired result.
+
+A functioning version is currently hostet at [hlcc.haj.gf](https://hlcc.haj.gf)
 
 ## building hlcc
 
-It can be compiled for web, running `wasm-pack` within the reposity and running `webpack` within the www/ directory.
+It can be compiled for web, running `wasm-pack` within the reposity. The actual web stuff can be packed running `webpack` while in the www/ directory.
 
-There is also an option to compile hlcc to a command line tool, using `rustc`.
+There is also an option to compile hlcc to a command line tool, using `cargo build`. <- this does not work yet
 
 ## features
 
-It currently features all SI prefixes, the hormones E2, T and P4, as well as Gram <-> Mole conversions. In the future it should also be able to convert Gram <-> Mole <-> Volume, and there will be more hormones.
+It currently features all SI prefixes, the hormones *E2*, *T* and *P4*, as well as *Gram* <---> *Mole* conversions. In the future it should also be able to convert *Gram* <---> *Mole* <---> *Volume*, and there will be more hormones.
 
 ## parser in depth
 
