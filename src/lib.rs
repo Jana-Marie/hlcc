@@ -13,8 +13,9 @@ use nom::{
     combinator::peek,
     };
 use std::env;
+use std::fmt;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 enum Prefix {
     Yocto,
     Zepto,
@@ -39,7 +40,7 @@ enum Prefix {
     Yotta,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 enum Unit {
     Gram,
     Mole,
@@ -47,7 +48,7 @@ enum Unit {
     None,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 enum Hormone {
     Cholesterol,
     Testosterone,
@@ -57,7 +58,13 @@ enum Hormone {
     Estriol,
     Estetrol,
     Progesterone,
+    Aldosterone,
     Cortisol,
+    Gonadorelin,
+    Fsh,
+    Lh,
+    Thyrotropin,
+    Shbg,
 }
 
 #[derive(Debug, PartialEq)]
@@ -80,7 +87,6 @@ struct Expression {
     in_val: f64,
 }
 
-
 impl From<&str> for Hormone {
     fn from(i: &str) -> Self {
         match i.to_lowercase().as_str() {
@@ -92,7 +98,13 @@ impl From<&str> for Hormone {
             "e3"|"estriol"|"oestriol"       => Hormone::Estriol,
             "e4"|"estetrol"|"oestetrol"     => Hormone::Estetrol,
             "p4"|"prog"|"progesterone"      => Hormone::Progesterone,
+            "aldosterone"|"aldocorten"      => Hormone::Aldosterone,
             "cortisol"                      => Hormone::Cortisol,
+            "gonadorelin"|"gnrh"            => Hormone::Gonadorelin,
+            "fsh"                           => Hormone::Fsh,
+            "lh"|"lutropin"|"lutrophin"     => Hormone::Lh,
+            "tsh"|"thyrotropin"             => Hormone::Thyrotropin,
+            "shbg"|"abp"|"sbp"|"tebg"       => Hormone::Shbg,
             _                               => unimplemented!("no other Hormones supported")
         }
     }
@@ -109,10 +121,51 @@ impl From<Hormone> for f64 {
             Hormone::Estriol                => 288.387,
             Hormone::Estetrol               => 304.386,
             Hormone::Progesterone           => 314.469,
+            Hormone::Aldosterone            => 360.450,
             Hormone::Cortisol               => 362.460,
+            Hormone::Gonadorelin            => 1182.311,
+            Hormone::Fsh                    => 30.0, // not sure if this is correct, mass is 30kDa
+            Hormone::Lh                     => 33.0, // again 33kDa
+            Hormone::Thyrotropin            => 28.0, // again 28kDa
+            Hormone::Shbg                   => 43.7, // again 43.7kDa
         }
     }
 }
+
+impl From<Hormone> for &str {
+    fn from(i: Hormone) -> Self {
+        match i {
+            Hormone::Cholesterol            => "Cholesterol",
+            Hormone::Testosterone           => "Testosterone",
+            Hormone::Dihydrotestosterone    => "Dihydrotestosterone",
+            Hormone::Estrone                => "Estrone",
+            Hormone::Estradiol              => "Estradiol",
+            Hormone::Estriol                => "Estriol",
+            Hormone::Estetrol               => "Estetrol",
+            Hormone::Progesterone           => "Progesterone",
+            Hormone::Aldosterone            => "Aldosterone",
+            Hormone::Cortisol               => "Cortisol",
+            Hormone::Gonadorelin            => "Gonadorelin",
+            Hormone::Fsh                    => "Follicle-stimulating hormone",
+            Hormone::Lh                     => "Luteinising hormone",
+            Hormone::Thyrotropin            => "Thyroid-stimulating hormone",
+            Hormone::Shbg                   => "Sex hormone-binding globulin",
+        }
+    }
+}
+
+impl fmt::Display for Hormone {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", <&str>::from(*self))
+    }
+}
+
+impl fmt::Display for UnitSingle {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}{}", <&str>::from(self.prefix), <&str>::from(self.unit))
+    }
+}
+
 
 impl From<&str> for Prefix {
     fn from(i: &str) -> Self {
@@ -171,6 +224,34 @@ impl From<Prefix> for i32 {
     }
 }
 
+impl From<Prefix> for &str {
+    fn from(i: Prefix) -> Self {
+        match i {
+            Prefix::Yocto => "y",
+            Prefix::Zepto => "z",
+            Prefix::Atto  => "a",
+            Prefix::Femto => "f",
+            Prefix::Pico  => "p",
+            Prefix::Nano  => "n",
+            Prefix::Mikro => "µ",
+            Prefix::Milli => "m",
+            Prefix::Centi => "c",
+            Prefix::Deci  => "d",
+            Prefix::None  => "",
+            Prefix::Deka  => "da",
+            Prefix::Hecto => "h",
+            Prefix::Kilo  => "k",
+            Prefix::Mega  => "M",
+            Prefix::Giga  => "G",
+            Prefix::Tera  => "T",
+            Prefix::Peta  => "P",
+            Prefix::Exa   => "E",
+            Prefix::Zetta => "Z",
+            Prefix::Yotta => "Y",
+        }
+    }
+}
+
 impl From<&str> for Unit {
     fn from(i: &str) -> Self {
         match i {
@@ -178,6 +259,17 @@ impl From<&str> for Unit {
             "mol"       => Unit::Mole,
             "l"|"L"|"ℓ" => Unit::Litre,
             _           => Unit::None // ugly, should panic, but no idea how to solve else
+        }
+    }
+}
+
+impl From<Unit> for &str {
+    fn from(i: Unit) -> Self {
+        match i {
+            Unit::Gram  => "g",
+            Unit::Mole  => "mol",
+            Unit::Litre => "ℓ",
+            Unit::None  => "",
         }
     }
 }
@@ -310,7 +402,7 @@ fn hcc_parser(i: &str) -> nom::IResult<&str, Expression> {
     })
 }
 
-fn compute_result(expression: Expression) -> f64 {
+fn compute_result(expression: &Expression) -> f64 {
     let prefix_calculation = (i32::from(expression.unit_in.numerator.prefix) + i32::from(expression.unit_out.denominator.prefix)) - (i32::from(expression.unit_in.denominator.prefix) + i32::from(expression.unit_out.numerator.prefix)); // use fixed point math to not loose precision
     match (expression.unit_in.numerator.unit, expression.unit_out.numerator.unit) { // very ugly math engine, does not allow all calculations, probably just prrof of concept
         (Unit::Mole, Unit::Gram) => f64::powf(10.0, prefix_calculation.into()) * (f64::from(expression.in_val) * f64::from(expression.hormone)),
@@ -324,24 +416,22 @@ fn compute_result(expression: Expression) -> f64 {
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-pub fn compute_input(x: String) -> f64{
-    if let Ok((_, expression)) = hcc_parser(&x) {
-        let value_out = compute_result(expression);
-        println!("Result: {:.2}", value_out);
-        value_out
+pub fn compute_input(s: &str) -> String{
+    if let Ok((_, expression)) = hcc_parser(s) {
+        format!("{:.03} {}/{} {}", compute_result(&expression), expression.unit_out.numerator, expression.unit_out.denominator, expression.hormone)
     } else {
-        -1.0
+        "error".to_string()
     }
 }
 
-fn main() {
-    let args: Vec<String> = env::args().collect();
-    println!("{:?}", args[1]);
-
-    if let Ok((_, expression)) = hcc_parser(&args[1]) {
-        let value_out = compute_result(expression);
-        println!("Computes to: {:.3}", value_out);
-    } else {
-        println!("Yet unknown error!");
-    }
-}
+//fn main() {
+//    let args: Vec<String> = env::args().collect();
+//    println!("{:?}", args[1]);
+//
+//    if let Ok((_, expression)) = hcc_parser(&args[1]) {
+//        let value_out = compute_result(expression);
+//        println!("Computes to: {:.3}", value_out);
+//    } else {
+//        println!("Yet unknown error!");
+//    }
+//}
