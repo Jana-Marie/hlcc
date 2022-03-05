@@ -418,7 +418,7 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 #[wasm_bindgen]
 pub fn compute_input(s: &str) -> String{
     if let Ok((_, expression)) = hcc_parser(s) {
-        format!("{:.03} {}/{} {}", compute_result(&expression), expression.unit_out.numerator, expression.unit_out.denominator, expression.hormone)
+        format!("{:.03} {}/{} {}", compute_result(&expression), expression.unit_out.numerator, expression.unit_out.denominator, expression.hormone)
     } else {
         "error".to_string()
     }

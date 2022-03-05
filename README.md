@@ -33,13 +33,14 @@ Oh and about the web interface, it is shitty, I know, I sincerely don't get CSS,
 ## todo
 
  - [ ] Rust: change f64 to d128 to avoid floating point rounding errors (decimal = "2.1")
- - [ ] Rust: add pretty print for output unit
+ - [x] Rust: add pretty print for output unit
+ - [ ] Rust: get command line tool to work
  - [x] Rust: add hormones: aldosterone, Gonadotropin, Gonadorhelin, SHBG,
  - [ ] Rust: add other blood and vital levels
- - [ ] Rust & JS: &str instead of String
+ - [x] Rust & JS: &str instead of String
  - [ ] Docs: add license
  - [ ] Web: change input fielt to form
  - [ ] Web: move output value to righthandside of the Input
  - [ ] Web: add better scaling
- - [ ] Web: h1 font pink
+ - [x] Web: h1 font pink
  - [ ] Web: fix JS, should be different handler (form handler)
