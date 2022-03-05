@@ -22,6 +22,8 @@ Okay, here is what the parser parses, or how you are supposed to build your inpu
 
 All prefixes are optional, a unit can have no prefix. All whitespaces can be of lenght 1 or longer, there can be optional whitespaces inbetween the number and the prefix. The conjunction can either be "in", "to", ">" or "->". As for the Hormone, either the full name, a common short version or the first letter (+number) can be used. In case of Estradiol, "Estradiol" or "E2". All units must be metric and can either be Gram "g", Litre "l" or Mole "mol". Prefixes must be SI prefixes.
 
+There was this thought while writing this, that this tool could convert almost all blood level values to different units. I should build another version with much more stuff.
+
 ## about the project
 
 After converting my own hormone levels once again by hand, and after using plenty only converter with simply unbearable user interfaces, I decided to write my own conversion tool. Since I really wanted to learn Rust (insert trans catgirl Rust meme here), I had to take this opportunity. I love the idea of „asking“ a computer a question, or rather forming your problem into a sentence and get it answered. Thus I decided to write a parser, which can take such a string, understand and compute it. This probably is not the easiest project to start with, but I had plenty of help by wonderful people and in the end, it worked out really well. Rust can be learned, even by a hardware catgirl like me. :3
