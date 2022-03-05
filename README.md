@@ -8,11 +8,11 @@ A functioning version is currently hostet at [hlcc.haj.gf](https://hlcc.haj.gf)
 
 It can be compiled for web, running `wasm-pack` within the reposity. The actual web stuff can be packed running `webpack` while in the www/ directory.
 
-There is also an option to compile hlcc to a command line tool, using `cargo build`. <- this does not work yet
+There is also an option to compile hlcc to a command line tool, using `cargo build`. ← this does not work yet
 
 ## features
 
-It currently features all SI prefixes, the hormones *Cortisol*, *Cholesterol*, *E1*, *E2*, *E3*,*E4*, *T*, *DHT* and *P4*, as well as *Gram* <—> *Mole* conversions. In the future it should also be able to convert *Gram* <—> *Mole* <—> *Volume*, and there will be more hormones.
+It currently features all SI prefixes, the hormones *Cortisol*, *Cholesterol*, *E1*, *E2*, *E3*,*E4*, *T*, *DHT* and *P4*, as well as *Gram* ⇋ *Mole* conversions. In the future it should also be able to convert *Gram* ⇋ *Mole* ⇋ *Volume*, and there will be more hormones.
 
 ## parser in depth
 
@@ -29,3 +29,8 @@ There was this thought while writing this, that this tool could convert almost a
 After converting my own hormone levels once again by hand, and after using plenty only converter with simply unbearable user interfaces, I decided to write my own conversion tool. Since I really wanted to learn Rust (insert trans catgirl Rust meme here), I had to take this opportunity. I love the idea of „asking“ a computer a question, or rather forming your problem into a sentence and get it answered. Thus I decided to write a parser, which can take such a string, understand and compute it. This probably is not the easiest project to start with, but I had plenty of help by wonderful people and in the end, it worked out really well. Rust can be learned, even by a hardware catgirl like me. :3
 
 Oh and about the web interface, it is shitty, I know, I sincerely don't get CSS, nor JS \*hisses at web stuff\*.
+
+## todo
+
+ - [ ] change f64 to d128 to avoid floating point rounding errors (decimal = "2.1")
+ - [ ] add hormones: aldosterone,
