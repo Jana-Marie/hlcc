@@ -1,6 +1,6 @@
 # hlcc :syringe:
 
-hlcc is a Rust :crab: and web based hormone level conversion calculator. It expects a string with the desired hormone, its level and the target unit; e.g. *Testo 1.8nmol/l in ng/ml*, *e2 111pg/ml to nmol/l*, *Progesterone 0.07pg/ml to mol/l*. And computes the desired result. A functioning version is currently hostet at [hlcc.haj.gf](https://hlcc.haj.gf)
+hlcc is a Rust :crab: and web based hormone level conversion calculator. It expects a string with the desired hormone, its level and the target unit; e.g. "*Testo 1.8nmol/l in ng/ml*", "*e2 111pg/ml to nmol/l*", "*Progesterone 0.07pg/ml to mol/l*". And computes the desired result. A functioning version is currently hostet at [hlcc.haj.gf](https://hlcc.haj.gf)
 
 ## building hlcc
 
