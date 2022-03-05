@@ -1,4 +1,4 @@
-// hormone-conversion-calculator
+// hormone-level-conversion-calculator
 // Jana Marie Hemsing - 2022
 
 mod utils;
@@ -13,7 +13,7 @@ use nom::{
     number::complete::double,
     combinator::peek,
     };
-//use std::env;
+use std::env;
 
 #[derive(Debug, PartialEq)]
 enum Prefix {
@@ -314,5 +314,17 @@ pub fn compute_input(x: String) -> f64{
         value_out
     } else {
         -1.0
+    }
+}
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    println!("{:?}", args[1]);
+
+    if let Ok((_, expression)) = hcc_parser(&args[1]) {
+        let value_out = compute_result(expression);
+        println!("Computes to: {:.3}", value_out);
+    } else {
+        println!("Yet unknown error!");
     }
 }
