@@ -49,9 +49,15 @@ enum Unit {
 
 #[derive(Debug, PartialEq)]
 enum Hormone {
+    Cholesterol,
     Testosterone,
+    Dihydrotestosterone,
+    Estrone,
     Estradiol,
+    Estriol,
+    Estetrol,
     Progesterone,
+    Cortisol,
 }
 
 #[derive(Debug, PartialEq)]
@@ -78,10 +84,16 @@ struct Expression {
 impl From<&str> for Hormone {
     fn from(i: &str) -> Self {
         match i.to_lowercase().as_str() {
-            "t"|"testo"|"testosterone"  => Hormone::Testosterone,
-            "e2"|"estradiol"            => Hormone::Estradiol,
-            "p4"|"prog"|"progesterone"  => Hormone::Progesterone,
-            _                           => unimplemented!("no other Hormones supported")
+            "cholesterol"|"cholesterin"     => Hormone::Cholesterol,
+            "t"|"testo"|"testosterone"      => Hormone::Testosterone,
+            "dht"|"dihydrotestosterone"     => Hormone::Dihydrotestosterone,
+            "e1"|"estrone"|"oestrone"       => Hormone::Estrone,
+            "e2"|"estradiol"|"oestradiol"   => Hormone::Estradiol,
+            "e3"|"estriol"|"oestriol"       => Hormone::Estriol,
+            "e4"|"estetrol"|"oestetrol"     => Hormone::Estetrol,
+            "p4"|"prog"|"progesterone"      => Hormone::Progesterone,
+            "cortisol"                      => Hormone::Cortisol,
+            _                               => unimplemented!("no other Hormones supported")
         }
     }
 }
@@ -89,9 +101,15 @@ impl From<&str> for Hormone {
 impl From<Hormone> for f64 {
     fn from(i: Hormone) -> Self {
         match i {
-            Hormone::Testosterone   => 288.42442,
-            Hormone::Estradiol      => 272.38,
-            Hormone::Progesterone   => 314.46,
+            Hormone::Cholesterol            => 386.65,
+            Hormone::Testosterone           => 288.431,
+            Hormone::Dihydrotestosterone    => 290.447,
+            Hormone::Estrone                => 270.336,
+            Hormone::Estradiol              => 272.38,
+            Hormone::Estriol                => 288.387,
+            Hormone::Estetrol               => 304.386,
+            Hormone::Progesterone           => 314.469,
+            Hormone::Cortisol               => 362.460,
         }
     }
 }
