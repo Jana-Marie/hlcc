@@ -12,7 +12,7 @@ There is also an option to compile hlcc to a command line tool, using `cargo bui
 
 ## features
 
-It currently features all SI prefixes, the hormones *E2*, *T* and *P4*, as well as *Gram* <—> *Mole* conversions. In the future it should also be able to convert *Gram* <—> *Mole* <—> *Volume*, and there will be more hormones.
+It currently features all SI prefixes, the hormones *Cortisol*, *Cholesterol*, *E1*, *E2*, *E3*,*E4*, *T*, *DHT* and *P4*, as well as *Gram* <—> *Mole* conversions. In the future it should also be able to convert *Gram* <—> *Mole* <—> *Volume*, and there will be more hormones.
 
 ## parser in depth
 
