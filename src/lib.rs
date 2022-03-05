@@ -129,27 +129,27 @@ impl From<&str> for Prefix {
 impl From<Prefix> for i32 {
     fn from(i: Prefix) -> Self {
         match i {
-            Prefix::Yocto => 24,
-            Prefix::Zepto => 21,
-            Prefix::Atto  => 18,
-            Prefix::Femto => 15,
-            Prefix::Pico  => 12,
-            Prefix::Nano  => 9,
-            Prefix::Mikro => 6,
-            Prefix::Milli => 3,
-            Prefix::Centi => 2,
-            Prefix::Deci  => 1,
-            Prefix::None  => 0,
-            Prefix::Deka  => 1,
-            Prefix::Hecto => 2,
-            Prefix::Kilo  => 3,
-            Prefix::Mega  => 6,
-            Prefix::Giga  => 9,
-            Prefix::Tera  => 12,
-            Prefix::Peta  => 15,
-            Prefix::Exa   => 18,
-            Prefix::Zetta => 21,
-            Prefix::Yotta => 24,
+            Prefix::Yocto => -24,
+            Prefix::Zepto => -21,
+            Prefix::Atto  => -18,
+            Prefix::Femto => -15,
+            Prefix::Pico  => -12,
+            Prefix::Nano  => -9,
+            Prefix::Mikro => -6,
+            Prefix::Milli => -3,
+            Prefix::Centi => -2,
+            Prefix::Deci  => -1,
+            Prefix::None  => +0,
+            Prefix::Deka  => +1,
+            Prefix::Hecto => +2,
+            Prefix::Kilo  => +3,
+            Prefix::Mega  => +6,
+            Prefix::Giga  => +9,
+            Prefix::Tera  => +12,
+            Prefix::Peta  => +15,
+            Prefix::Exa   => +18,
+            Prefix::Zetta => +21,
+            Prefix::Yotta => +24,
         }
     }
 }
@@ -280,7 +280,7 @@ fn hcc_parser(i: &str) -> nom::IResult<&str, Expression> {
 }
 
 fn compute_result(expression: Expression) -> f64 {
-    let prefix_calculation = -((i32::from(expression.unit_in.numerator.prefix) + i32::from(expression.unit_out.denominator.prefix)) - (i32::from(expression.unit_in.denominator.prefix) + i32::from(expression.unit_out.numerator.prefix))); // use fixed point math to not loose precision
+    let prefix_calculation = ((i32::from(expression.unit_in.numerator.prefix) + i32::from(expression.unit_out.denominator.prefix)) - (i32::from(expression.unit_in.denominator.prefix) + i32::from(expression.unit_out.numerator.prefix))); // use fixed point math to not loose precision
     match (expression.unit_in.numerator.unit, expression.unit_out.numerator.unit) { // very ugly math engine, does not allow all calculations, probably just prrof of concept
         (Unit::Mole, Unit::Gram) => f64::powf(10.0, prefix_calculation.into()) * (f64::from(expression.in_val) * f64::from(expression.hormone)),
         (Unit::Gram, Unit::Mole) => f64::powf(10.0, prefix_calculation.into())  * (f64::from(expression.in_val) / f64::from(expression.hormone)),
