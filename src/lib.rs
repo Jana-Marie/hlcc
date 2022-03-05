@@ -183,6 +183,10 @@ fn prefix(i: &str) -> nom::IResult<&str, Prefix> {
     context(
         "Prefix",
         alt((
+            tag("y"),
+            tag("z"),
+            tag("a"),
+            tag("f"),
             tag("p"),
             tag("n"),
             tag("u"),
@@ -190,6 +194,16 @@ fn prefix(i: &str) -> nom::IResult<&str, Prefix> {
             tag("m"),
             tag("c"),
             tag("d"),
+            tag("da"),
+            tag("h"),
+            tag("k"),
+            tag("M"),
+            tag("G"),
+            tag("T"),
+            tag("P"),
+            tag("E"),
+            tag("Z"),
+            tag("Y"),
         )))(i).map(|(next_i, res)| (next_i, res.into()))
 }
 
