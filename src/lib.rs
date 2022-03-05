@@ -1,7 +1,6 @@
 // hormone-level-conversion-calculator
 // Jana Marie Hemsing - 2022
 
-mod utils;
 extern crate nom;
 
 use wasm_bindgen::prelude::*;
