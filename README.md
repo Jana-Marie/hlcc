@@ -26,7 +26,7 @@ There was this thought while writing this, that this tool could convert almost a
 
 ## about the project
 
-After converting my own hormone levels once again by hand, and after using plenty only converter with simply unbearable user interfaces, I decided to write my own conversion tool. Since I really wanted to learn Rust (insert trans catgirl Rust meme here), I had to take this opportunity. I love the idea of „asking“ a computer a question, or rather forming your problem into a sentence and get it answered. Thus I decided to write a parser, which can take such a string, understand and compute it. This probably is not the easiest project to start with, but I had plenty of help by wonderful people and in the end, it worked out really well. Rust can be learned, even by a hardware catgirl like me. :3
+After converting my own hormone levels once again by hand, and after using plenty online converter with simply unbearable user interfaces, I decided to write my own conversion tool. Since I really wanted to learn Rust (insert trans catgirl Rust meme here), I had to take this opportunity. I love the idea of „asking“ a computer a question, or rather forming your problem into a sentence and get it answered. Thus I decided to write a parser, which can take such a string, understand and compute it. This probably is not the easiest project to start with, but I had plenty of help by wonderful people and in the end, it worked out really well. Rust can be learned, even by a hardware catgirl like me. :3
 
 Oh and about the web interface, it is shitty, I know, I sincerely don't get CSS, nor JS \*hisses at web stuff\*.
 
