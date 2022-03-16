@@ -8,7 +8,7 @@ A functioning version is currently hostet at [hlcc.haj.gf](https://hlcc.haj.gf)
 
 It can be compiled for web, running `wasm-pack` within the reposity. The actual web stuff can be packed running `webpack` while in the www/ directory.
 
-There is also an option to compile hlcc to a command line tool, using `cargo build`. ← this does not work yet
+~~There is also an option to compile hlcc to a command line tool, using `cargo build`.~~ ← this does not work yet
 
 ## features
 
