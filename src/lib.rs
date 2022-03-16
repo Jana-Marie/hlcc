@@ -292,6 +292,7 @@ fn prefix(i: &str) -> nom::IResult<&str, Prefix> {
     context(
         "Prefix",
         alt((
+            tag("da"),
             tag("y"),
             tag("z"),
             tag("a"),
@@ -303,7 +304,6 @@ fn prefix(i: &str) -> nom::IResult<&str, Prefix> {
             tag("m"),
             tag("c"),
             tag("d"),
-            tag("da"),
             tag("h"),
             tag("k"),
             tag("M"),
