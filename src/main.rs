@@ -3,7 +3,7 @@
 
 extern crate nom;
 
-use wasm_bindgen::prelude::*;
+//use wasm_bindgen::prelude::*;
 use nom::{
     bytes::complete::{take_till, take_while, take_while1, tag_no_case, tag},
     error::context,
@@ -411,27 +411,26 @@ fn compute_result(expression: &Expression) -> f64 {
     }
 }
 
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+//#[cfg(feature = "wee_alloc")]
+//#[global_allocator]
+//static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[wasm_bindgen]
-pub fn compute_input(s: &str) -> String{
-    if let Ok((_, expression)) = hcc_parser(s) {
-        format!("{:.03} {}/{} {}", compute_result(&expression), expression.unit_out.numerator, expression.unit_out.denominator, expression.hormone)
-    } else {
-        "error".to_string()
-    }
-}
-
-//fn main() {
-//    let args: Vec<String> = env::args().collect();
-//    println!("{:?}", args[1]);
-//
-//    if let Ok((_, expression)) = hcc_parser(&args[1]) {
-//        let value_out = compute_result(expression);
-//        println!("Computes to: {:.3}", value_out);
+//#[wasm_bindgen]
+//pub fn compute_input(s: &str) -> String{
+//    if let Ok((_, expression)) = hcc_parser(s) {
+//        format!("{:.03} {}/{} {}", compute_result(&expression), expression.unit_out.numerator, expression.unit_out.denominator, expression.hormone)
 //    } else {
-//        println!("Yet unknown error!");
+//        "error".to_string()
 //    }
 //}
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    println!("{:?} ", args[1]);
+
+    if let Ok((_, expression)) = hcc_parser(&args[1]) {
+        println!("computes to {:.03} {}/{} {}", compute_result(&expression), expression.unit_out.numerator, expression.unit_out.denominator, expression.hormone);
+    } else {
+        println!("Error");
+    }
+}
