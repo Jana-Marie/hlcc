@@ -47,6 +47,7 @@ async fn compute(req: Request<()>) -> tide::Result {
     Ok(
         Response::builder(StatusCode::Ok)
         .content_type("text/plain;charset=UTF-8")
+        .header("Cache-Control", "public, max-age=86400")
         .body(res)
         .build()
     )
