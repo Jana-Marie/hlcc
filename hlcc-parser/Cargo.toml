@@ -1,0 +1,11 @@
+[package]
+name = "hlcc-parser"
+version = "0.1.0"
+authors = ["Jana Marie Hemsing <janamarie@janamarie.dev>"]
+edition = "2021"
+description = "A string parsing and web based hormone level conversion calculator. It can evaluate strings like „Testo 1.8nmol/l to pg/ml“ and display the result."
+repository = "https://github.com/Jana-Marie/hlcc/"
+license = "AGPL-3.0-or-later"
+
+[dependencies]
+nom = "7.1"
