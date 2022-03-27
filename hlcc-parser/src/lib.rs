@@ -85,26 +85,25 @@ struct Expression {
     in_val: f64,
 }
 
-impl TryFrom<&str> for Hormone {
-    type Error = &'static str;
-    fn try_from(i: &str) -> Result<Self, Self::Error> {
+impl From<&str> for Hormone {
+    fn from(i: &str) -> Self {
         match i.to_lowercase().as_str() {
-            "cholesterol"|"cholesterin"     => Ok(Hormone::Cholesterol),
-            "t"|"testo"|"testosterone"      => Ok(Hormone::Testosterone),
-            "dht"|"dihydrotestosterone"     => Ok(Hormone::Dihydrotestosterone),
-            "e1"|"estrone"|"oestrone"       => Ok(Hormone::Estrone),
-            "e2"|"estradiol"|"oestradiol"   => Ok(Hormone::Estradiol),
-            "e3"|"estriol"|"oestriol"       => Ok(Hormone::Estriol),
-            "e4"|"estetrol"|"oestetrol"     => Ok(Hormone::Estetrol),
-            "p4"|"prog"|"progesterone"      => Ok(Hormone::Progesterone),
-            "aldosterone"|"aldocorten"      => Ok(Hormone::Aldosterone),
-            "cortisol"                      => Ok(Hormone::Cortisol),
-            "gonadorelin"|"gnrh"            => Ok(Hormone::Gonadorelin),
-            "fsh"                           => Ok(Hormone::Fsh),
-            "lh"|"lutropin"|"lutrophin"     => Ok(Hormone::Lh),
-            "tsh"|"thyrotropin"             => Ok(Hormone::Thyrotropin),
-            "shbg"|"abp"|"sbp"|"tebg"       => Ok(Hormone::Shbg),
-            _                               => Err("no other Hormones supported")
+            "cholesterol"|"cholesterin"     => Hormone::Cholesterol,
+            "t"|"testo"|"testosterone"      => Hormone::Testosterone,
+            "dht"|"dihydrotestosterone"     => Hormone::Dihydrotestosterone,
+            "e1"|"estrone"|"oestrone"       => Hormone::Estrone,
+            "e2"|"estradiol"|"oestradiol"   => Hormone::Estradiol,
+            "e3"|"estriol"|"oestriol"       => Hormone::Estriol,
+            "e4"|"estetrol"|"oestetrol"     => Hormone::Estetrol,
+            "p4"|"prog"|"progesterone"      => Hormone::Progesterone,
+            "aldosterone"|"aldocorten"      => Hormone::Aldosterone,
+            "cortisol"                      => Hormone::Cortisol,
+            "gonadorelin"|"gnrh"            => Hormone::Gonadorelin,
+            "fsh"                           => Hormone::Fsh,
+            "lh"|"lutropin"|"lutrophin"     => Hormone::Lh,
+            "tsh"|"thyrotropin"             => Hormone::Thyrotropin,
+            "shbg"|"abp"|"sbp"|"tebg"       => Hormone::Shbg,
+            _                               => unimplemented!("no other Hormones supported")
         }
     }
 }
@@ -276,7 +275,7 @@ impl From<Unit> for &str {
 fn hormone(i: &str) -> nom::IResult<&str, Hormone> {
     context(
         "Hormone",
-        take_till(|c| c == ' '))(i).map(|(next_i, res)| (next_i, res.try_into().unwrap()))
+        take_till(|c| c == ' '))(i).map(|(next_i, res)| (next_i, res.into()))
 }
 
 fn value(i: &str) -> nom::IResult<&str, f64> {
