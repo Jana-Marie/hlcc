@@ -12,7 +12,7 @@ document.getElementsByTagName('form')[0].addEventListener('submit', function(ev)
 });
 
 function process_fragment(){
-  let input = decodeURI(window.location.hash.substring(1));
+  let input = decodeURIComponent(window.location.hash.substring(1));
   document.getElementsByTagName('input')[0].value = input;
   let out = document.getElementById("hormone_output");
   let res = compute_input(input);
