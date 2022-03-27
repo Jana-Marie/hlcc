@@ -6,13 +6,13 @@ A functioning webasm version is currently hostet at [hlcc.haj.gf](https://hlcc.h
 
 ## using hlcc
 
-The hlcc library itself can be found with the `hlcc-parser` folder. It exposes a `compute()` function, which takes a string slice (`&str`) and returns a string buffer (`String`). For more information see [hlcc-parser/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-parser/README.md)
+The **hlcc library** itself can be found with the `hlcc-parser` folder. It exposes a `compute()` function, which takes a string slice (`&str`) and returns a string buffer (`String`). For more information see [hlcc-parser/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-parser/README.md)
 
-A command line interface for hlcc is available in the `hlcc-cli` directory, it can be compiled using `cargo build` or installed using `cargo install --path .`. It can compute either a single string or multiple strings at the same time; `hlcc_cli "t 1.8nmol/l to ng/dl"`; `hlcc_cli "t 1.8nmol/l to ng/dl" "e2 111ng/dl to nmol/l"`. For more information see [hlcc-cli/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-cli/README.md)
+A **command line interface** for hlcc is available in the `hlcc-cli` directory, it can be compiled using `cargo build` or installed using `cargo install --path .`. It can compute either a single string or multiple strings at the same time; `hlcc_cli "t 1.8nmol/l to ng/dl"`; `hlcc_cli "t 1.8nmol/l to ng/dl" "e2 111ng/dl to nmol/l"`. For more information see [hlcc-cli/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-cli/README.md)
 
-It can als be compiled for web as webassembly, running `wasm-pack build` within the `hlcc-web` folder. The actual website can be packed running `webpack` while in the `www/` directory. You can of course use the instance I am hosting; [hlcc.haj.gf](https://hlcc.haj.gf). For more information see [hlcc-web/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-web/README.md)
+It can als be compiled for **web as webassembly**, running `wasm-pack build` within the `hlcc-web` folder. The actual website can be packed running `webpack` while in the `www/` directory. You can of course use the instance I am hosting; [hlcc.haj.gf](https://hlcc.haj.gf). For more information see [hlcc-web/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-web/README.md)
 
-A http api service can be compiled from within the `hlcc-service` directory using `cargo-build`. It can be installed using `cargo install --path .`. The service expects its IP and Port as command line parameter; `hlcc-service "[::1]:8080"`. A request can be for example `https://api.hlcc.haj.gf/?q=t%201.8nmol/l%20to%20ng/dl`, you can again use the service running at [api.hlcc.haj.gf](https://api.hlcc.haj.gf/?q=). For more information see [hlcc-service/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-service/README.md)
+A **http api** service can be compiled from within the `hlcc-service` directory using `cargo-build`. It can be installed using `cargo install --path .`. The service expects its IP and Port as command line parameter; `hlcc-service "[::1]:8080"`. A request can be for example `https://api.hlcc.haj.gf/?q=t%201.8nmol/l%20to%20ng/dl`, you can again use the service running at [api.hlcc.haj.gf](https://api.hlcc.haj.gf/?q=). For more information see [hlcc-service/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-service/README.md)
 
 ## features
 
