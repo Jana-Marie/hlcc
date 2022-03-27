@@ -1,14 +1,18 @@
 # hlcc :syringe:
 
-hlcc is a Rust :crab: and web based hormone level conversion calculator. It expects a string with the desired hormone, its level and the target unit; e.g. "*Testo 1.8nmol/l in ng/ml*", "*e2 111pg/ml to nmol/l*" or "*Progesterone 0.07pg/ml to mol/l*". And computes the desired result.
+hlcc is a Rust :crab: based hormone level conversion calculator. It expects a string with the desired hormone, its level and the target unit; e.g. "*Testo 1.8nmol/l in ng/ml*", "*e2 111pg/ml to nmol/l*" or "*Progesterone 0.07pg/ml to mol/l*", parses and computes the desired result.
 
-A functioning version is currently hostet at [hlcc.haj.gf](https://hlcc.haj.gf)
+A functioning webasm version is currently hostet at [hlcc.haj.gf](https://hlcc.haj.gf)
 
-## building hlcc
+## using hlcc
 
-It can be compiled for web, running `wasm-pack` within the reposity. The actual web stuff can be packed running `webpack` while in the www/ directory.
+The hlcc library itself can be found with the `hlcc-parser` folder. It exposes a `compute()` function, which takes a string slice (`&str`) and returns a string buffer (`String`). For more information see [hlcc-parser/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-parser/README.md)
 
-There is also an option to compile hlcc to a command line tool, check out the commandline branch. :3
+A command line interface for hlcc is available in the `hlcc-cli` directory, it can be compiled using `cargo build` or installed using `cargo install --path .`. It can compute either a single string or multiple strings at the same time; `hlcc_cli "t 1.8nmol/l to ng/dl"`; `hlcc_cli "t 1.8nmol/l to ng/dl" "e2 111ng/dl to nmol/l"`. For more information see [hlcc-cli/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-cli/README.md)
+
+It can als be compiled for web as webassembly, running `wasm-pack build` within the `hlcc-web` folder. The actual website can be packed running `webpack` while in the `www/` directory. You can of course use the instance I am hosting; [hlcc.haj.gf](https://hlcc.haj.gf). For more information see [hlcc-web/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-web/README.md)
+
+A http api service can be compiled from within the `hlcc-service` directory using `cargo-build`. It can be installed using `cargo install --path .`. The service expects its IP and Port as command line parameter; `hlcc-service "[::1]:8080"`. A request can be for example `https://api.hlcc.haj.gf/?q=t%201.8nmol/l%20to%20ng/dl`, you can again use the service running at [api.hlcc.haj.gf](https://api.hlcc.haj.gf/?q=). For more information see [hlcc-service/README.md](https://github.com/Jana-Marie/hlcc/blob/main/hlcc-service/README.md)
 
 ## features
 
@@ -34,14 +38,14 @@ Oh and about the web interface, it is shitty, I know, I sincerely don't get CSS,
 
  - [ ] Rust: change f64 to d128 to avoid floating point rounding errors (decimal = "2.1")
  - [x] Rust: add pretty print for output unit
- - [ ] Rust: get command line tool to work
+ - [x] Rust: get command line tool to work
  - [x] Rust: add hormones: aldosterone, Gonadotropin, Gonadorhelin, SHBG,
  - [ ] Rust: add other blood and vital levels
  - [ ] Rust: Bug: "t 1.8nmol/l to ng/d" produces a numeric result, it shouldn't
  - [x] Rust & JS: &str instead of String
  - [ ] Docs: add license
- - [ ] Web: change input fielt to form
+ - [x] Web: change input fielt to form
  - [ ] Web: move output value to righthandside of the Input
  - [ ] Web: add better scaling
  - [x] Web: h1 font pink
- - [ ] Web: fix JS, should be different handler (form handler)
+ - [x] Web: fix JS, should be different handler (form handler)
