@@ -37,6 +37,7 @@ Oh and about the web interface, it is shitty, I know, I sincerely don't get CSS,
  - [ ] Rust: get command line tool to work
  - [x] Rust: add hormones: aldosterone, Gonadotropin, Gonadorhelin, SHBG,
  - [ ] Rust: add other blood and vital levels
+ - [ ] Rust: Bug: "t 1.8nmol/l to ng/d" produces a numeric result, it shouldn't
  - [x] Rust & JS: &str instead of String
  - [ ] Docs: add license
  - [ ] Web: change input fielt to form
