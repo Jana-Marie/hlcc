@@ -1,5 +1,5 @@
-// hormone-level-conversion-calculator
-// Jana Marie Hemsing - 2022
+// hlcc-parser -  hormone level conversion calculator parser library
+// Copyright (C) 2022 Jana Marie Hemsing
 
 extern crate nom;
 

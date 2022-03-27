@@ -1,3 +1,5 @@
+// Copyright (C) 2022 Jana Marie Hemsing
+
 import { compute_input } from "../pkg/hlcc_web.js";
 
 if(window.location.hash) {

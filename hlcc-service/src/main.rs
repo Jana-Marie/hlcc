@@ -1,3 +1,6 @@
+// hlcc-service  -  hlcc http api
+// Copyright (C) 2022 Jana Marie Hemsing
+
 use tide::{Request, StatusCode, Response};
 use std::borrow::Cow;
 use std::env;

@@ -1,3 +1,6 @@
+// hlcc-cli  -  hlcc command line interface
+// Copyright (C) 2022 Jana Marie Hemsing
+
 use std::env;
 
 fn main() {

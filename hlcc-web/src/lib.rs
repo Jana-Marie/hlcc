@@ -1,3 +1,6 @@
+// hlcc-web  -  hlcc wasm interface
+// Copyright (C) 2022 Jana Marie Hemsing
+
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "wee_alloc")]
