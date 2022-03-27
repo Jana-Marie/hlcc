@@ -1,11 +1,23 @@
 import { compute_input } from "../pkg/hlcc.js";
 
-var textBox = document.getElementById('hormone_input');
-textBox.addEventListener('keypress', function(){
-    if(event.which == 13){
-      let res = compute_input(document.getElementById('hormone_input').value);
-      document.getElementById("hormone_output").innerHTML = res
-      document.getElementById("hormone_output").classList.add("fade-in");
-      console.log(res);
-    }
+if(window.location.hash) {
+  process_fragment();
+}
+
+window.addEventListener('hashchange', process_fragment);
+
+document.getElementsByTagName('form')[0].addEventListener('submit', function(ev){
+  window.location.hash = document.getElementsByTagName('input')[0].value;
+  ev.preventDefault();
 });
+
+function process_fragment(){
+  let input = decodeURI(window.location.hash.substring(1));
+  document.getElementsByTagName('input')[0].value = input;
+  let out = document.getElementById("hormone_output");
+  let res = compute_input(input);
+  out.innerHTML = res;
+  out.classList.add("fade-in");
+  console.log(res);
+
+}
