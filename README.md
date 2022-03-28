@@ -40,12 +40,15 @@ Oh and about the web interface, it is shitty, I know, I sincerely don't get CSS,
  - [x] Rust: add pretty print for output unit
  - [x] Rust: get command line tool to work
  - [x] Rust: add hormones: aldosterone, Gonadotropin, Gonadorhelin, SHBG,
+ - [ ] Rust: remove panic, add proper error reporting
  - [ ] Rust: add other blood and vital levels
  - [ ] Rust: Bug: "t 1.8nmol/l to ng/d" produces a numeric result, it shouldn't
  - [x] Rust & JS: &str instead of String
- - [ ] Docs: add license
+ - [x] Docs: add license
+ - [ ] Docs: work on parser library readme
  - [x] Web: change input fielt to form
  - [ ] Web: move output value to righthandside of the Input
+ - [ ] Web: have a prettier input field
  - [ ] Web: add better scaling
  - [x] Web: h1 font pink
  - [x] Web: fix JS, should be different handler (form handler)
