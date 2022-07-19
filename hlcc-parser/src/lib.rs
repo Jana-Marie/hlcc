@@ -63,6 +63,7 @@ enum Hormone {
     Lh,
     Thyrotropin,
     Shbg,
+    Prolactin,
 }
 
 #[derive(Debug, PartialEq)]
@@ -103,6 +104,7 @@ impl From<&str> for Hormone {
             "lh"|"lutropin"|"lutrophin"     => Hormone::Lh,
             "tsh"|"thyrotropin"             => Hormone::Thyrotropin,
             "shbg"|"abp"|"sbp"|"tebg"       => Hormone::Shbg,
+            "prolactin"|"prl"|"lth"         => Hormone::Prolactin,
             _                               => unimplemented!("no other Hormones supported")
         }
     }
@@ -126,6 +128,7 @@ impl From<Hormone> for f64 {
             Hormone::Lh                     => 33.0, // again 33kDa
             Hormone::Thyrotropin            => 28.0, // again 28kDa
             Hormone::Shbg                   => 43.7, // again 43.7kDa
+            Hormone::Prolactin              => 22.892, // again 22.9kDa
         }
     }
 }
@@ -148,6 +151,7 @@ impl From<Hormone> for &str {
             Hormone::Lh                     => "Luteinising hormone",
             Hormone::Thyrotropin            => "Thyroid-stimulating hormone",
             Hormone::Shbg                   => "Sex hormone-binding globulin",
+            Hormone::Prolactin              => "Prolactin"
         }
     }
 }
