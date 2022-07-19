@@ -21,5 +21,4 @@ function process_fragment(){
   out.innerHTML = res;
   out.classList.add("fade-in");
   console.log(res);
-
 }
