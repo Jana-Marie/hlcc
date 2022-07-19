@@ -422,11 +422,11 @@ fn hcc_parser(i: &str) -> nom::IResult<&str, Expression> {
 
 fn compute_result(expression: &Expression) -> f64 {
     let prefix_calculation = (i32::from(expression.unit_in.numerator.prefix) + i32::from(expression.unit_out.denominator.prefix)) - (i32::from(expression.unit_in.denominator.prefix) + i32::from(expression.unit_out.numerator.prefix)); // use fixed point math to not loose precision
-    match (expression.unit_in.numerator.unit, expression.unit_out.numerator.unit) { // very ugly math engine, does not allow all calculations, probably just proof of concept
-        (Unit::Mole, Unit::Gram) => f64::powf(10.0, prefix_calculation.into()) * (f64::from(expression.in_val) * f64::from(expression.hormone)),
-        (Unit::Gram, Unit::Mole) => f64::powf(10.0, prefix_calculation.into())  * (f64::from(expression.in_val) / f64::from(expression.hormone)),
-        (Unit::Gram, Unit::Gram) | (Unit::Mole, Unit::Mole) => f64::powf(10.0, prefix_calculation.into())  * f64::from(expression.in_val),
-        (_,_) => 0.0,
+    match (expression.unit_in.numerator.unit, expression.unit_in.denominator.unit, expression.unit_out.numerator.unit, expression.unit_out.denominator.unit) { // very ugly math engine, does not allow all calculations, probably just proof of concept
+        (Unit::Mole, Unit::Litre, Unit::Gram, Unit::Litre) => f64::powf(10.0, prefix_calculation.into()) * (f64::from(expression.in_val) * f64::from(expression.hormone)),
+        (Unit::Gram, Unit::Litre, Unit::Mole, Unit::Litre) => f64::powf(10.0, prefix_calculation.into())  * (f64::from(expression.in_val) / f64::from(expression.hormone)),
+        (Unit::Gram, Unit::Litre, Unit::Gram, Unit::Litre) | (Unit::Mole, Unit::Litre, Unit::Mole, Unit::Litre) => f64::powf(10.0, prefix_calculation.into())  * f64::from(expression.in_val),
+        (_,_,_,_) => -1.0,
     }
 }
 
