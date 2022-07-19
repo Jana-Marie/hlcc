@@ -12,46 +12,45 @@
 			body,html {
 				width: 100vw;
 				height: 100%;
-			  min-height: 100%;
+			  	min-height: 100%;
 				font-family: 'Roboto', sans-serif;
 				box-sizing: border-box;
-				background-color: #000;
 				overflow-x: hidden;
 				overflow-y: hidden;
+				margin: 0;
 			}
 
 			.bg-image {
 				background-image: linear-gradient(to bottom, #55CDFC 0% 20%, #F7A8B8 20% 40%, #FFFFFF 40% 60%, #F7A8B8 60% 80%, #55CDFC 80% 100%);
-				filter: blur(20px);
-				-webkit-filter: blur(20px) brightness(23%);
+				background-position: center center;
 				height: 100vh;
 				width: 100vw;
-   		  margin: -10px;
-				background-position: center center;
-				position: absolute;
+   		  		position: fixed;
+				top: 0;
+				left: 0;
 				background-repeat: no-repeat;
 				background-size: cover;
+				filter: brightness(23%);
+				z-index: -1;
 			}
 
-			h1 {
+			.bg-image::after {
+				content: "";
 				color: #F7A8B8;
 				line-height: 200px;
 				margin-top: -100px;
 				position: absolute;
-				text-align: center;
-				top: 20vh;
-				width: 100%;
-				font-size: 3vw;
+	            width: 100vw;
+	            height: 100vh;
+	            backdrop-filter: blur(20px);
+	            pointer-events: none;
 			}
 
-			.footer {
-				position: fixed;
-				left: 0;
-				bottom: 0;
-				width: 100%;
-				font-size: 1.5vw;
-				color: white;
+            h1 {
+                color: #F7A8B8;
+                margin-top: calc(20vh - (clamp(2rem, 3vw, 3rem) / 2));
 				text-align: center;
+				font-size: clamp(2rem, 3vw, 3rem);
 			}
 
 			a:link, a:visited {
@@ -66,31 +65,28 @@
 
 			.f_input {
 				color: #040404;
-				font-size: 2vw;
-				margin: 0 auto;
-				position: absolute;
-				top: 28vh;
-				margin-left: auto;
-				margin-right: auto;
-				left: 0;
-				right: 0;
+				font-size: clamp(1.2rem, 2vw, 2.5rem);
+				margin: 0 auto 5vh;
 				padding: 1.5rem 2rem;
 				border-radius: 0.2rem;
 				background-color: #ffffff;
 				text-align: center;
 				border: none;
-				width: 30vw;
+				width: 60vw;
+				min-height: 2vh;
 				display: block;
 				border-bottom: 0.3rem solid transparent;
 			}
 
+            @media screen and (min-width: 1024px) {
+                .f_input {
+                    width: 30vw !important;
+                }
+            }
+
 			.hormone_result {
-				font-size: 3vw;
+				font-size: clamp(1.5rem, 2.5vw, 3rem);
 				margin: 0 auto;
-				position: absolute;
-				top: 39vh;
-				margin-left: auto;
-				margin-right: auto;
 				text-align: center;
 				left: 0;
 				right: 0;
@@ -100,6 +96,16 @@
 				opacity: 0;
 			}
 
+            .footer {
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                font-size: 1.3rem;
+                color: white;
+                text-align: center;
+            }
+ 
 			.fade-out {
 				visibility: hidden;
 				opacity: 0;
@@ -123,7 +129,7 @@
 		</div>
 		<div class="hormone_result" id="hormone_output">MauMau</div>
 		<div class="footer">
-			<p><a href="https://github.com/Jana-Marie/hlcc">source</a> - <a href="https://github.com/Jana-Marie/hlcc#about-the-project">about</a> - <a href="https://api.hlcc.haj.gf">api</a> - <a href="https://github.com/Jana-Marie/hlcc/blob/main/ISSUES.md">issues?</a> - <a href="https://janamarie.dev">contact</a></p>
+			<p><a href="https://github.com/Jana-Marie/hlcc">source</a> - <a href="https://github.com/Jana-Marie/hlcc#about-the-project">about</a> - <a href="https://api.hlcc.haj.gf/?q=t%201.8nmol/l%20to%20ng/dl">api</a> - <a href="https://github.com/Jana-Marie/hlcc/blob/main/ISSUES.md">issues?</a> - <a href="https://janamarie.dev">contact</a></p>
 		</div>
 	</body>
 </html>
