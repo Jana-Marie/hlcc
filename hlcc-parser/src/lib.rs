@@ -124,7 +124,7 @@ impl From<Hormone> for f64 {
             Hormone::Cholesterol            => 386.65,
             Hormone::Testosterone           => 288.431,
             Hormone::Dihydrotestosterone    => 290.447,
-            Hormone::Dehydroepiandrosterone => 288.424
+            Hormone::Dehydroepiandrosterone => 288.424,
             Hormone::Estrone                => 270.336,
             Hormone::Estradiol              => 272.38,
             Hormone::Estriol                => 288.387,
@@ -151,7 +151,7 @@ impl From<Hormone> for &str {
             Hormone::Cholesterol            => "Cholesterol",
             Hormone::Testosterone           => "Testosterone",
             Hormone::Dihydrotestosterone    => "Dihydrotestosterone",
-            Hormone::Dehydroepiandrosterone => "Dehydroepiandrosterone"
+            Hormone::Dehydroepiandrosterone => "Dehydroepiandrosterone",
             Hormone::Estrone                => "Estrone",
             Hormone::Estradiol              => "Estradiol",
             Hormone::Estriol                => "Estriol",
