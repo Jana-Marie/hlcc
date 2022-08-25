@@ -68,6 +68,8 @@ enum Hormone {
     Prolactin,
     Thyroxine,
     Triiodothyronine,
+    Cholecalciferol,
+    Cobalamin,
 }
 
 #[derive(Debug, PartialEq)]
@@ -113,6 +115,8 @@ impl From<&str> for Hormone {
             "prolactin"|"prl"|"lth"         => Hormone::Prolactin,
             "t4"|"thyroxine"                => Hormone::Thyroxine,
             "t3"|"triiodothyronine"         => Hormone::Triiodothyronine,
+            "d3"|"cholecalciferol"          => Hormone::Cholecalciferol,
+            "b12"|"cobalamin"               => Hormone::Cobalamin,
             _                               => unimplemented!("no other Hormones supported")
         }
     }
@@ -134,13 +138,15 @@ impl From<Hormone> for f64 {
             Hormone::Androstenedione        => 286.415,
             Hormone::Cortisol               => 362.460,
             Hormone::Gonadorelin            => 1182.311,
-            Hormone::Fsh                    => 30.0, // not sure if this is correct, mass is 30kDa
+            Hormone::Fsh                    => 30.0, // not sure if this is correct, mass is 30kDa, should be
             Hormone::Lh                     => 33.0, // again 33kDa
             Hormone::Thyrotropin            => 28.0, // again 28kDa
             Hormone::Shbg                   => 43.7, // again 43.7kDa
             Hormone::Prolactin              => 22.892, // again 22.9kDa
             Hormone::Thyroxine              => 776.87,
             Hormone::Triiodothyronine       => 650.977,
+            Hormone::Cholecalciferol        => 384.64,
+            Hormone::Cobalamin              => 1355.388, // chonker
         }
     }
 }
@@ -168,6 +174,8 @@ impl From<Hormone> for &str {
             Hormone::Prolactin              => "Prolactin",
             Hormone::Thyroxine              => "Thyroxine",
             Hormone::Triiodothyronine       => "Triiodothyronine",
+            Hormone::Cholecalciferol        => "Vitamin D3",
+            Hormone::Cobalamin              => "Vitamin B12",
         }
     }
 }
