@@ -48,7 +48,7 @@ Oh and about the web interface, it is shitty, I know, I sincerely don't get CSS,
  - [ ] Docs: work on parser library readme
  - [x] Web: change input fielt to form
  - [ ] Web: move output value to righthandside of the Input
- - [ ] Web: have a prettier input field
- - [ ] Web: add better scaling
+ - [x] Web: have a prettier input field
+ - [x] Web: add better scaling
  - [x] Web: h1 font pink
  - [x] Web: fix JS, should be different handler (form handler)
