@@ -9,5 +9,5 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 pub fn compute_input(s: &str) -> String{
-    hlcc_parser::compute(s).unwrap_or_else(|| "Error".to_string())
+    hlcc_parser::compute(s).unwrap_or_else(|e| e.to_string())
 }
