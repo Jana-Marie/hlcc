@@ -1,0 +1,74 @@
+use lalrpop_util::ParseError;
+use std::str::FromStr;
+use crate::{Expression, Hormone, Prefix, Unit, UnitSingle, UnitRatio};
+
+grammar;
+
+// <hormone> <number><(O)prefix><unit>/<(O)prefix><unit> <conjunction> <(O)prefix><unit>/<(O)prefix><unit>
+
+Hormone: Hormone = {
+    r"cholesterol|cholesterin"                    => Hormone::Cholesterol,
+    r"t|testo|testosterone"                       => Hormone::Testosterone,
+    r"dht|dihydrotestosterone"                    => Hormone::Dihydrotestosterone,
+    r"dhea|dehydroepiandrosterone|androstenolone" => Hormone::Dehydroepiandrosterone,
+    r"e1|estrone|oestrone"                        => Hormone::Estrone,
+    r"e2|estradiol|oestradiol"                    => Hormone::Estradiol,
+    r"e3|estriol|oestriol"                        => Hormone::Estriol,
+    r"e4|estetrol|oestetrol"                      => Hormone::Estetrol,
+    r"p4|prog|progesterone"                       => Hormone::Progesterone,
+    r"aldosterone|aldocorten"                     => Hormone::Aldosterone,
+    r"a4|androstenedione"                         => Hormone::Androstenedione,
+    "cortisol"                                    => Hormone::Cortisol,
+    r"gonadorelin|gnrh"                           => Hormone::Gonadorelin,
+    "fsh"                                         => Hormone::Fsh,
+    r"lh|lutropin|lutrophin"                      => Hormone::Lh,
+    r"tsh|thyrotropin"                            => Hormone::Thyrotropin,
+    r"shbg|abp|sbp|tebg"                          => Hormone::Shbg,
+    r"prolactin|prl|lth"                          => Hormone::Prolactin,
+    r"t4|thyroxine"                               => Hormone::Thyroxine,
+    r"t3|triiodothyronine"                        => Hormone::Triiodothyronine,
+    r"d3|cholecalciferol"                         => Hormone::Cholecalciferol,
+    r"b12|cobalamin"                              => Hormone::Cobalamin,
+};
+
+Prefix: Prefix = {
+    "y"     => Prefix::Yocto,
+    "z"     => Prefix::Zepto,
+    "a"     => Prefix::Atto,
+    "f"     => Prefix::Femto,
+    "p"     => Prefix::Pico,
+    "n"     => Prefix::Nano,
+    r"u|µ"  => Prefix::Mikro,
+    "m"     => Prefix::Milli,
+    "c"     => Prefix::Centi,
+    "d"     => Prefix::Deci,
+    "da"    => Prefix::Deka,
+    "h"     => Prefix::Hecto,
+    "k"     => Prefix::Kilo,
+    "M"     => Prefix::Mega,
+    "G"     => Prefix::Giga,
+    "T"     => Prefix::Tera,
+    "P"     => Prefix::Peta,
+    "E"     => Prefix::Exa,
+    "Z"     => Prefix::Zetta,
+    "Y"     => Prefix::Yotta,
+};
+
+Unit: Unit = {
+    "g"      => Unit::Gram,
+    "mol"    => Unit::Mole,
+    r"l|L|ℓ" => Unit::Litre,
+};
+
+UnitSingle: UnitSingle = {
+    <prefix:Prefix> <unit:Unit> => UnitSingle { <> },
+    <unit:Unit> => UnitSingle { prefix: Prefix::None, <> },
+};
+
+UnitRatio: UnitRatio = <numerator:UnitSingle> "/" <denominator:UnitSingle> => UnitRatio { <> };
+
+pub(crate) Expression: Expression =
+    <hormone:Hormone> <in_val:Num> <unit_in:UnitRatio> r"to|->|>" <unit_out:UnitRatio> => Expression { <> };
+
+Num: f64 = <s:r"[0-9\.]+"> =>? f64::from_str(s)
+    .map_err(|_| ParseError::User { error: "invalid number format" });

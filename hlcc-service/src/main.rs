@@ -35,13 +35,13 @@ async fn compute(req: Request<()>) -> tide::Result {
         ),
         Some(input) =>
             match hlcc_parser::compute(&input) {
-                None => return Ok(
+                Err(e) => return Ok(
                     Response::builder(StatusCode::BadRequest)
                     .content_type("text/plain")
-                    .body("Parser Error\n")
+                    .body(format!("Parser Error: {}\n", e))
                     .build()
                 ),
-                Some(res) => res
+                Ok(res) => res
             }
     };
 

@@ -13,8 +13,8 @@ struct Handler;
 fn run_parser(input: &str) -> String {
     let res = hlcc_parser::compute(&input);
     match res {
-        Some(out) => format!("{} computes to\n{}", input, out),
-        None => format!("{} does not compute :(", input),
+        Ok(out) => format!("{} computes to\n{}", input, out),
+        Err(e) => format!("{} :(", e),
     }
 }
 
