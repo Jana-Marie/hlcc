@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+"hlcc-cli",
+"hlcc-discord",
+"hlcc-parser",
+"hlcc-service",
+"hlcc-web",
+]
