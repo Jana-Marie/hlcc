@@ -1,0 +1,69 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+name: Build
+jobs:
+  build-cli:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        package-set: ["", pkgsCross.aarch64-multiplatform., pkgsCross.armv7l-hf-multiplatform., pkgsCross.gnu32., pkgsCross.riscv64., pkgsCross.s390x.]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+        with:
+          diagnostic-endpoint: ""
+
+      - run: echo "CARGO_BUILD_TARGET=$(nix eval --raw nixpkgs#${{ matrix.package-set }}pkgsStatic.rustPlatform.cargoBuildHook.rustTargetPlatformSpec)" >> $GITHUB_ENV
+      - run: echo "TARGET_PREFIX=$(nix eval --raw nixpkgs#${{ matrix.package-set }}pkgsStatic.stdenv.cc.targetPrefix)" >> $GITHUB_ENV
+
+      # Install appropriate rust toolchain and linker
+      - run: nix profile install nixpkgs/dd44e564ad4ef870091a0ec1d7be08ff9cc3288e#${{ matrix.package-set }}pkgsStatic.{stdenv.cc,buildPackages.cargo}
+
+      # Make sure rust can find the linker
+      - run: mkdir .cargo
+      - run: |
+          cat << EOF > .cargo/config
+          [target."$CARGO_BUILD_TARGET"]
+          linker = "${TARGET_PREFIX}cc"
+          rustflags = [ "-C", "target-feature=+crt-static" ]
+          EOF
+
+      # Build
+      - run: cargo build --bin hlcc-cli --release
+      - run: ${TARGET_PREFIX}strip target/${{ env.CARGO_BUILD_TARGET }}/release/hlcc-cli
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: hlcc-cli-${{ env.CARGO_BUILD_TARGET }}
+          path: target/${{ env.CARGO_BUILD_TARGET }}/release/hlcc-cli
+
+  build-web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+        with:
+          diagnostic-endpoint: ""
+
+      - run: nix profile install nixpkgs#rustup nixpkgs#wasm-pack nixpkgs#nodejs
+      - run: rustup install stable
+      - run: wasm-pack build
+        working-directory: hlcc-web
+      - run: npm ci
+        working-directory: hlcc-web/www
+      - run: npx webpack
+        working-directory: hlcc-web/www
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: hlcc-web
+          path: hlcc-web/www/dist
