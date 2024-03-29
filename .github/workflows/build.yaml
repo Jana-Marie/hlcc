@@ -1,7 +1,5 @@
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 name: Build
@@ -11,20 +9,20 @@ jobs:
 
     strategy:
       matrix:
-        package-set: ["", pkgsCross.aarch64-multiplatform., pkgsCross.armv7l-hf-multiplatform., pkgsCross.gnu32., pkgsCross.riscv64., pkgsCross.s390x.]
+        package-set: ["", pkgsCross.aarch64-multiplatform., pkgsCross.armv7l-hf-multiplatform., pkgsCross.gnu32.]
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v22
-      - uses: DeterminateSystems/magic-nix-cache-action@v2
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v26
+      - uses: DeterminateSystems/magic-nix-cache-action@v4
         with:
           diagnostic-endpoint: ""
 
-      - run: echo "CARGO_BUILD_TARGET=$(nix eval --raw nixpkgs#${{ matrix.package-set }}pkgsStatic.rustPlatform.cargoBuildHook.rustTargetPlatformSpec)" >> $GITHUB_ENV
-      - run: echo "TARGET_PREFIX=$(nix eval --raw nixpkgs#${{ matrix.package-set }}pkgsStatic.stdenv.cc.targetPrefix)" >> $GITHUB_ENV
+      - run: echo "CARGO_BUILD_TARGET=$(nix eval --raw nixpkgs/20f77aa09916374aa3141cbc605c955626762c9a#${{ matrix.package-set }}pkgsStatic.stdenv.targetPlatform.rust.rustcTargetSpec)" >> $GITHUB_ENV
+      - run: echo "TARGET_PREFIX=$(nix eval --raw nixpkgs/20f77aa09916374aa3141cbc605c955626762c9a#${{ matrix.package-set }}pkgsStatic.stdenv.cc.targetPrefix)" >> $GITHUB_ENV
 
       # Install appropriate rust toolchain and linker
-      - run: nix profile install nixpkgs/dd44e564ad4ef870091a0ec1d7be08ff9cc3288e#${{ matrix.package-set }}pkgsStatic.{stdenv.cc,buildPackages.cargo}
+      - run: nix profile install nixpkgs/20f77aa09916374aa3141cbc605c955626762c9a#${{ matrix.package-set }}pkgsStatic.{stdenv.cc,buildPackages.cargo}
 
       # Make sure rust can find the linker
       - run: mkdir .cargo
@@ -48,9 +46,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v22
-      - uses: DeterminateSystems/magic-nix-cache-action@v2
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v26
+      - uses: DeterminateSystems/magic-nix-cache-action@v4
         with:
           diagnostic-endpoint: ""
 
